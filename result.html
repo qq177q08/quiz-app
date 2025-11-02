@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>診断結果 - 外国人材定着支援ナビ</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="page-wrapper">
+        <header class="global-header">
+            <a href="index.html" class="header-logo">外国人材定着支援ナビ</a>
+        </header>
+
+        <div class="container result-container">
+            <h2>診断結果</h2>
+
+            <div class="overall-result-area">
+                <div class="score-and-comment">
+                    <div class="score-display">
+                        <p>あなたの総合スコアは...</p>
+                        <h3 id="score-value">-- / 100点</h3>
+                        <p id="rank-text">評価ランク: --</p>
+                    </div>
+                    <div class="overall-comment">
+                        <h4>総合コメント</h4>
+                        <p id="overall-comment-text">診断結果を計算中です...</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="radar-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="detailed-results-section">
+                <h4>カテゴリ別の詳細</h4>
+                <div id="detailed-results-list">
+                    </div>
+            </div>
+            
+            <div class="concerns-section" id="concerns-area" style="display: none;">
+                <h4>貴社が現在お困りのこと</h4>
+                <p id="concerns-text"></p>
+            </div>
+
+            <div class="result-footer-buttons">
+                <button class="back-button" id="print-button">PDFとして保存</button>
+                <a href="index.html" class="next-button">トップに戻る</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="result.js"></script>
+    <script src="header.js"></script> </body>
+</html>

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>外国人材定着支援ナビ</title>
     <link rel="stylesheet" href="style.css">
+
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 </head>
 <body>
     <div class="page-wrapper">
@@ -12,18 +15,46 @@
             <a href="index.html" class="header-logo">外国人材定着支援ナビ</a>
         </header>
 
-        <div class="container top-container">
-            <main class="top-main">
-                <p class="catch-copy">
-                    外国人材に<br>「選ばれる職場」ですか？
+        <main class="hero-section">
+            
+            <div class="hero-text">
+                <h1 class="hero-catch-copy">
+                    外国人材の「定着力」を今すぐ診断する。
+                </h1>
+                <p class="hero-description">
+                    数々の中小企業を支援してきた「外国人雇用コンサルタント」監修。全45問で、貴社の"強み"と"課題"を客観的に可視化します。
                 </p>
-                <p class="description">
-                    約10分の診断で、貴社の受け入れ体制の強みと課題を「見える化」します。
-                    自社の立ち位置を正確に把握し、専門家との具体的な改善アクションにつなげることで、外国人材が定着・活躍できる環境を実現しましょう。
-                </p>
-                <a href="quiz.html" class="start-button large-button">今すぐ無料診断する</a>
-            </main>
-        </div>
+                <a href="quiz.html" class="hero-cta-button">無料で体制診断をはじめる</a>
+            </div>
+            
+            <div class="hero-image-placeholder">
+                
+                <lottie-player 
+                    src="hero-animation.json" 
+                    background="transparent" 
+                    speed="1" 
+                    loop 
+                    autoplay>
+                </lottie-player>
+
+            </div>
+
+        </main>
+        
     </div>
+
+    <footer class="global-footer">
+        <p>©2025 外国人材定着支援ナビ All rights reserved.</p>
+        
+        <div class="footer-links">
+            <a href="mailto:info@example.com" class="footer-contact-icon" aria-label="お問い合わせ">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+            </a>
+        </div>
+    </footer>
+
     </body>
 </html>

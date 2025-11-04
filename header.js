@@ -15,6 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // ★ ユーザーが「OK」を押した場合のみ、トップページに移動
             if (userConfirmed) {
+                // ★★★ バグ修正: 診断履歴をクリアする ★★★
+                sessionStorage.removeItem('quizAnswers');
+                sessionStorage.removeItem('quizConcerns');
+                
                 window.location.href = 'index.html';
             }
             // 「キャンセル」が押された場合は何もしない

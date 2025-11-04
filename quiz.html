@@ -7,17 +7,18 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="fixed-progress-bar">
+        <div class="fixed-progress" style="width: 0%;"></div>
+    </div>
+
     <div class="page-wrapper">
         <header class="global-header">
             <a href="index.html" class="header-logo">外国人材定着支援ナビ</a>
         </header>
 
-        <div class="container quiz-container" id="quiz-area">
+        <div class="quiz-container" id="quiz-area">
             <p class="current-category">カテゴリ読み込み中...</p>
             
-            <div class="progress-bar">
-                <div class="progress" style="width: 0%;"></div>
-            </div>
             <div class="quiz-content">
                 <h2 class="question-number">Q1</h2>
                 <p class="question-text">
@@ -29,16 +30,31 @@
             <button class="back-button" id="back-q-button" disabled>戻る</button>
         </div>
 
-        <div class="container freetext-container" id="freetext-area" style="display: none;">
+        <div class="freetext-container" id="freetext-area" style="display: none;">
             <h2>ご協力ありがとうございます</h2>
-            <p class="description" style="text-align: center;">
+            <p class="description">
                 最後に、現在貴社が外国人材の受け入れ・定着に関して抱えている、
                 具体的なお困りごとや課題があれば自由にご記入ください。
             </p>
-            <textarea id="freetext-concerns" placeholder="例：採用面接での見極めが難しい、入社後のコミュニケーションがうまくいかない、など"></textarea>
+            
+            <textarea id="freetext-concerns" placeholder="例：採用面接での見極めが難しい、入社後のコミュニケーションがうまくいかない、など" maxlength="500"></textarea>
+            
             <button class="next-button" id="show-result-button">診断結果を見る</button>
         </div>
     </div>
+
+    <footer class="global-footer">
+        <p>©2025 外国人材定着支援ナビ All rights reserved.</p>
+        
+        <div class="footer-links">
+            <a href="mailto:info@example.com" class="footer-contact-icon" aria-label="お問い合わせ">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+            </a>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
     <script src="header.js"></script> </body>

@@ -40,9 +40,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
     const userAnswers = JSON.parse(answersString);
 
+    // ★ 診断が完了したので、ここで診断履歴（quizAnswers）は削除する
     sessionStorage.removeItem('quizAnswers');
-    sessionStorage.removeItem('quizConcerns');
-
     
     const response = await fetch('questions.json');
     const allQuestions = (await response.json()).questions;
@@ -102,22 +101,42 @@ window.addEventListener('DOMContentLoaded', async () => {
             selectedText: selectedTextForList,
             score: answerScoreForList,
             maxScore: maxScoreForQuestion
-            // isNotImplemented は削除
         });
     });
 
 
     const finalScore = totalMaxPossibleScore > 0 ? Math.round((totalScore / totalMaxPossibleScore) * 100) : 0;
+    
+    // ★★★ ランク判定ロジック ★★★
     let finalRank = 'C';
-    if (finalScore >= 90) { finalRank = 'S'; }
-    else if (finalScore >= 75) { finalRank = 'A'; }
-    else if (finalScore >= 50) { finalRank = 'B'; }
+    let rankClass = 'rank-bg-c'; // CSSクラス名 (バナー用)
+    if (finalScore >= 90) { 
+        finalRank = 'S'; 
+        rankClass = 'rank-bg-s';
+    }
+    else if (finalScore >= 75) { 
+        finalRank = 'A'; 
+        rankClass = 'rank-bg-a';
+    }
+    else if (finalScore >= 50) { 
+        finalRank = 'B'; 
+        rankClass = 'rank-bg-b';
+    }
+    // Cランクはデフォルト (rank-bg-c)
 
-    // --- 3. 総合結果の表示 ---
-    document.getElementById('score-value').textContent = `${finalScore} / 100点`;
+    // --- 3. ★★★ ランク別アニメーションの再生 ★★★
+    // (これが終わった後にスコア表示が実行される)
+    await playRankAnimation(finalRank);
+
+    // --- 4. 総合結果の表示 (新しいバナーに反映) ---
+    const banner = document.getElementById('result-banner');
+    banner.classList.add(rankClass); // ★ ランクに応じた背景色クラスを追加 (バナーのみ)
+
+    // ★★★ スコアのカウントアップアニメーションを実行 ★★★
+    animateCountUp(document.getElementById('score-value'), finalScore);
     document.getElementById('rank-text').textContent = `評価ランク: ${finalRank}`;
 
-    // --- 4. レーダーチャート & 総合コメント準備 ---
+    // --- 5. レーダーチャート & 総合コメント準備 ---
     const categoryData = categoriesOrder.map(catName => {
         const res = categoryResults[catName];
         let percentage = 0;
@@ -177,13 +196,25 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     // レーダーチャート
     const radarCtx = document.getElementById('radar-chart').getContext('2d');
-    const radarLabels = categoryData.map(cat => cat.name.replace(/Part\d+：/, '').split('・'));
+    
+    // ★★★ レーダーチャートのラベルを2行センター揃えに統一 ★★★
+    const radarLabels = [
+        ['雇用の意識', 'ルール'],
+        ['採用・面接の', '工夫'],
+        ['入社時の', '受け入れ'],
+        ['日常の支援', '安全'],
+        ['入社後の', 'キャリア'],
+        ['職場・生活', 'サポート']
+    ];
     const radarScores = categoryData.map(cat => cat.percentage);
 
+    // ★★★ Sランクの色を緑に変更 ★★★
     const getRankColor = (rank) => {
         switch(rank) {
-            case 'S': return '#8a00d4'; case 'A': return '#28a745';
-            case 'B': return '#0a9396'; case 'C': return '#dc3545';
+            case 'S': return '#28a745'; /* ★ 紫から緑に変更 */
+            case 'A': return '#28a745';
+            case 'B': return '#0a9396'; 
+            case 'C': return '#dc3545';
             default: return '#777';
         }
     };
@@ -191,27 +222,40 @@ window.addEventListener('DOMContentLoaded', async () => {
     new Chart(radarCtx, {
         type: 'radar',
         data: {
-            labels: radarLabels,
+            labels: radarLabels, // ★ 修正したラベル
             datasets: [{
                 label: 'カテゴリ別達成度 (%)', data: radarScores,
-                backgroundColor: 'rgba(10, 147, 150, 0.2)',
+                backgroundColor: 'rgba(10, 147, 150, 0.1)', // ★ 透明度 0.1
                 borderColor: 'rgba(10, 147, 150, 1)',
                 borderWidth: 2,
                 pointBackgroundColor: categoryData.map(cat => getRankColor(cat.rank)),
                 pointBorderColor: '#fff',
                 pointHoverBackgroundColor: '#fff',
                 pointHoverBorderColor: categoryData.map(cat => getRankColor(cat.rank)),
-                pointRadius: 5,
-                pointHoverRadius: 7
+                pointRadius: 6, // ★ 6
+                pointHoverRadius: 8 // ★ 8
             }]
         },
         options: {
              maintainAspectRatio: false,
             scales: {
                 r: {
-                    angleLines: { display: true },
-                    suggestedMin: 0, suggestedMax: 100,
-                    ticks: { stepSize: 25, backdropColor: 'transparent', display: false },
+                    // ★★★ チャートデザイン変更 ★★★
+                    angleLines: { 
+                        display: true,
+                        color: '#ddd' // ★ 放射線の色
+                    },
+                    suggestedMin: 0, 
+                    suggestedMax: 100,
+                    grid: {
+                        color: 'transparent' // ★ グリッド線(円)を透明に
+                    },
+                    ticks: { 
+                        display: false, // ★ 目盛り(0, 25, 50...)を非表示に
+                        stepSize: 25, 
+                        backdropColor: 'transparent'
+                    },
+                    // ★★★ ここまで ★★★
                     pointLabels: {
                         font: { size: 16 },
                         padding: 20,
@@ -240,14 +284,14 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // --- 5. 詳細結果（「回答の詳細」を表示） ---
+    // --- 6. 詳細結果（「回答の詳細」を表示） ---
     const detailedResultsListEl = document.getElementById('detailed-results-list');
     detailedResultsListEl.innerHTML = '';
 
     categoryData.forEach(({ name: categoryName, percentage, rank }) => {
         const result = categoryResults[categoryName];
         if (!result || !result.answers || result.answers.length === 0) return;
-
+        
         let answerListHtml = '<ul class="answer-detail-list">';
         result.answers.forEach(answer => {
 
@@ -262,7 +306,6 @@ window.addEventListener('DOMContentLoaded', async () => {
             if (answer.score === -1) {
                 rankDisplayHtml = `<span class="answer-rank-na">対象外</span>`;
             } else {
-                // ★★★ 0点=D, 1点=C に変更 ★★★
                 let scoreRank = 'D'; // デフォルト (0点)
                 if (answer.score === 4) scoreRank = 'S';
                 else if (answer.score === 3) scoreRank = 'A';
@@ -271,7 +314,6 @@ window.addEventListener('DOMContentLoaded', async () => {
                 
                 rankDisplayHtml = `<span class="answer-rank">${scoreRank}</span>`;
                 
-                // ★ Dランクの場合にハイライトクラスを追加
                 if (scoreRank === 'D') {
                     itemClass = 'rank-d-highlight';
                 }
@@ -287,13 +329,15 @@ window.addEventListener('DOMContentLoaded', async () => {
         });
         answerListHtml += '</ul>';
 
+        // ★★★ ランクブロックから rank-bg-* クラスを削除 ★★★
         const rankBlockHtml = rank === '-' ? 
             `<span class="rank-block-na">対象外</span>` :
             `<div>
-                <span class="rank-block rank-bg-${rank}">${rank}ランク</span>
+                <span class="rank-block">${rank}ランク</span>
                 <span class="rank-percentage">(${percentage}%)</span>
              </div>`;
 
+        // ★★★ カード自体から rank-bg-* クラスを削除 ★★★
         const resultCard = `
             <div class="result-card">
                 <div class="card-header">
@@ -309,11 +353,23 @@ window.addEventListener('DOMContentLoaded', async () => {
         `;
         detailedResultsListEl.insertAdjacentHTML('beforeend', resultCard);
     });
+    
+    // --- 6b. ★★★ 自動アコーディオンオープン (Dランクがある場合) ★★★
+    document.querySelectorAll('.result-card').forEach(card => {
+        const hasDRank = card.querySelector('.rank-d-highlight');
+        if (hasDRank) {
+            card.classList.add('is-open');
+        }
+    });
 
-    // --- 6. 詳細リストのクリックイベント（モーダル表示） ---
+
+    // --- 7. ★★★ アコーディオン機能（詳細リストの開閉） ★★★
     detailedResultsListEl.addEventListener('click', (event) => {
-        const answerItem = event.target.closest('.answer-item');
-        if (answerItem) {
+        const header = event.target.closest('.card-header');
+        
+        // 質問項目(li)のモーダル表示を優先
+        if (event.target.closest('.answer-item')) {
+            const answerItem = event.target.closest('.answer-item');
             const questionId = parseInt(answerItem.dataset.questionId);
             const question = allQuestions.find(q => q.id === questionId);
 
@@ -327,25 +383,37 @@ window.addEventListener('DOMContentLoaded', async () => {
                 
                 modalOverlay.classList.add('visible');
             }
+            return; // ヘッダーのクリックイベントを起動させない
+        }
+        
+        // ヘッダーがクリックされた場合
+        if (header) {
+            const card = header.closest('.result-card');
+            if (card) {
+                // クリックされたカードの開閉状態をトグル
+                card.classList.toggle('is-open');
+            }
         }
     });
 
-    // --- 7. 自由記述欄の表示 ---
+    // --- 8. 自由記述欄の表示 ---
     if (concernsText && concernsText.trim() !== "") {
         const concernsArea = document.getElementById('concerns-area');
         const concernsTextEl = document.getElementById('concerns-text');
-        concernsTextEl.textContent = concernsText;
-        concernsArea.style.display = 'block';
+        if (concernsTextEl) {
+             concernsTextEl.textContent = concernsText;
+             concernsArea.style.display = 'block';
+        }
     }
 
-    // --- 8. PDF保存ボタンの処理 ---
+    // --- 9. ★★★ PDF保存ボタンの処理 (window.print() に差し戻し) ★★★
     const printButton = document.getElementById('print-button');
     printButton.addEventListener('click', () => {
         
         const score = document.getElementById('score-value').textContent;
         const rank = document.getElementById('rank-text').textContent;
         const comment = document.getElementById('overall-comment-text').innerHTML;
-        const concerns = document.getElementById('concerns-text').textContent;
+        const concerns = concernsText; // ★ 変数 concernsText を直接参照
         const radarCanvas = document.getElementById('radar-chart');
         
         const today = new Date();
@@ -358,6 +426,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             console.error("チャートの画像への変換に失敗:", e);
         }
 
+        // ★★★ ここからが手動HTML構築ロジック (古い内容) ★★★
         let printHtml = `
             <html>
             <head>
@@ -399,7 +468,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
                     /* PDF固有の評価テキスト色 */
                     .eval-not-applicable { color: #6c757d; } /* 評価不能 */
-                    .eval-S { color: #8a00d4; }
+                    .eval-S { color: #28a745; } /* ★ 紫から緑 */
                     .eval-A { color: #28a745; }
                     .eval-B { color: #0a9396; }
                     .eval-C { color: #dc3545; }
@@ -441,7 +510,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                     <h2>カテゴリ別の詳細</h2>
         `;
 
-        // --- 3. 全45問の詳細を追加 ---
+        // --- 3. 全45問の詳細を追加 (ここが重要) ---
         categoryData.forEach(({ name: categoryName, percentage, rank: categoryRank }) => {
             const result = categoryResults[categoryName];
             if (!result || !result.answers || result.answers.length === 0) return;
@@ -458,9 +527,9 @@ window.addEventListener('DOMContentLoaded', async () => {
             
             result.answers.forEach(answer => {
                 const questionIndex = allQuestions.findIndex(item => item.id === answer.questionId) + 1;
-                const cleanedQuestionText = answer.text.replace(/^[0-9]+-[0-9]+：.+?\n/, '');
-
-                const cleanedSelectedText = answer.selectedText.replace(/^はい、/, '').replace(/^いいえ、/, '').trim();
+                // ★★★ (PDF用) 質問文の整形 ★★★
+                const cleanedQuestionText = (answer.text || '').replace(/^[0-9]+-[0-9]+：.+?\n/, '').trim();
+                const cleanedSelectedText = (answer.selectedText || '').replace(/^はい、/, '').replace(/^いいえ、/, '').trim();
                 
                 let rankText = '';
                 let rankClass = '';
@@ -471,7 +540,6 @@ window.addEventListener('DOMContentLoaded', async () => {
                     rankClass = "eval-not-applicable";
                     scoreTextForPDF = '';
                 } else {
-                    // ★★★ 0点=D, 1点=C に変更 ★★★
                     let scoreRank = 'D'; // デフォルト (0点)
                     if (answer.score === 4) scoreRank = 'S';
                     else if (answer.score === 3) scoreRank = 'A';
@@ -483,12 +551,14 @@ window.addEventListener('DOMContentLoaded', async () => {
                     scoreTextForPDF = ` (${answer.score}点)`;
                 }
                 
+                // ★★★ (PDF用) これが「前の内容」のHTMLです ★★★
                 printHtml += `
                     <li class="answer-item">
                         <span class="label">${answer.label.replace(/Q\d+\s/, '')}</span>
                         <div class="choice-container">
                             <span class="question-full-text">(Q${questionIndex}) ${cleanedQuestionText}</span>
-                            <span class="choice"><strong>[回答]</strong> ${cleanedSelectedText}</span> </div>
+                            <span class="choice"><strong>[回答]</strong> ${cleanedSelectedText}</span> 
+                        </div>
                         <span class="eval ${rankClass}">${rankText}${scoreTextForPDF}</span>
                     </li>
                 `;
@@ -507,7 +577,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             `;
         }
 
-        // ★★★ 5. PDF最下部の注意書きを修正 ★★★
+        // --- 5. PDF最下部の注意書きを修正 ---
         printHtml += `
                 <div class="disclaimer">
                     <h3>診断結果の評価について</h3>
@@ -520,6 +590,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
         printHtml += `</div></body></html>`;
 
+        // ★★★ (PDF用) 印刷ウィンドウを開く ★★★
         const printWindow = window.open('', '_blank');
         printWindow.document.write(printHtml);
         printWindow.document.close();
@@ -534,4 +605,94 @@ window.addEventListener('DOMContentLoaded', async () => {
             }
         }, 1000);
     });
+
+    // --- 9. "トップに戻る" ボタンの処理 ---
+    const backToTopButton = document.querySelector('.result-footer-buttons .next-button');
+    if (backToTopButton) {
+        backToTopButton.addEventListener('click', (event) => {
+            event.preventDefault(); // リンクを即座に実行しない
+            
+            // ★ 診断履歴（自由記述欄）もクリア
+            sessionStorage.removeItem('quizConcerns');
+            // (quizAnswers は既にページ読み込み時に削除済み)
+            
+            // トップページに移動
+            window.location.href = event.target.href;
+        });
+    }
+
+    // --- 10. ★★★ スコア・カウントアップ関数 ★★★
+    function animateCountUp(element, finalValue) {
+        let start = 0;
+        const duration = 1500; // 1.5秒
+        const startTime = performance.now();
+
+        function update(currentTime) {
+            const elapsedTime = currentTime - startTime;
+            const progress = Math.min(elapsedTime / duration, 1);
+            
+            // イージング関数 (easeOutQuad) で滑らかな減速
+            const easeOutProgress = progress * (2 - progress);
+            const currentVal = Math.floor(easeOutProgress * finalValue);
+            
+            element.textContent = `${currentVal} / 100点`;
+
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            } else {
+                element.textContent = `${finalValue} / 100点`; // 最終値を保証
+            }
+        }
+        
+        // 0点を表示してからアニメーション開始
+        element.textContent = `0 / 100点`;
+        requestAnimationFrame(update);
+    }
+
+    // --- 11. ★★★ Lottie アニメーション再生関数 ★★★
+    function playRankAnimation(rank) {
+        return new Promise((resolve) => {
+            const overlay = document.getElementById('animation-overlay');
+            if (!overlay) return resolve();
+
+            let animationFile = 'c_rank.json'; // デフォルト (C)
+            if (rank === 'S') animationFile = 's_rank.json';
+            else if (rank === 'A') animationFile = 'a_rank.json';
+            else if (rank === 'B') animationFile = 'b_rank.json';
+
+            // Lottie プレイヤーを生成
+            const player = document.createElement('lottie-player');
+            player.src = animationFile;
+            player.background = "transparent";
+            player.speed = "1";
+            player.style = "width: 400px; height: 400px; max-width: 80%;";
+            player.autoplay = true;
+
+            overlay.innerHTML = ''; // 中身をクリア
+            overlay.appendChild(player);
+            overlay.classList.add('is-visible'); // 表示
+
+            const animationDuration = 3500; // 3.5秒 (アニメーションの長さに合わせて調整)
+
+            // アニメーションが終わるか、時間が来たらフェードアウト
+            const onComplete = () => {
+                overlay.classList.add('fade-out');
+                // 0.5秒のフェードアウト後にDOMから削除
+                setTimeout(() => {
+                    overlay.remove();
+                    resolve(); // アニメーション完了を通知
+                }, 500);
+            };
+
+            // 念のため時間でも発火
+            const timer = setTimeout(onComplete, animationDuration);
+
+            // アニメーション完了イベントで発火
+            player.addEventListener('complete', () => {
+                clearTimeout(timer); // 時間差発火をキャンセル
+                onComplete();
+            });
+        });
+    }
+
 });

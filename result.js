@@ -34,10 +34,39 @@ window.addEventListener('DOMContentLoaded', async () => {
     const answersString = sessionStorage.getItem('quizAnswers');
     const concernsText = sessionStorage.getItem('quizConcerns') || ''; 
     
+    // ★★★ エラー処理を修正 (枠を削除) ★★★
     if (!answersString) { 
-        document.body.innerHTML = "<h1>エラー: 回答データが見つかりません。</h1><p>診断を最初からやり直してください。</p>"; 
-        return; 
+        const pageWrapper = document.querySelector('.page-wrapper');
+        if (pageWrapper) {
+            // ★ .container の「枠」を使わない、シンプルなエラー表示
+            pageWrapper.innerHTML = `
+                <div style="text-align: center; padding-top: 60px; padding-bottom: 60px; max-width: 700px; margin: 0 auto;">
+                    <h2 style="color: #005f73; font-size: 1.8em; margin-bottom: 20px;">エラーが発生しました</h2>
+                    <p style="font-size: 1.1em; margin-bottom: 40px; line-height: 1.8;">
+                        回答データが見つかりません。<br>
+                        診断セッションがタイムアウトしたか、診断が中断されました。<br>
+                        お手数ですが、最初からやり直してください。
+                    </p>
+                    <a href="index.html" class="next-button" style="width: 250px; margin: 0 auto;">トップページに戻る</a>
+                </div>
+            `;
+            // ★ フッターも非表示にする
+            const footer = document.querySelector('.global-footer');
+            if (footer) footer.style.display = 'none';
+            
+            // ★ Lottieオーバーレイも消す (あれば)
+            const lottieOverlay = document.getElementById('animation-overlay');
+            if (lottieOverlay) lottieOverlay.remove();
+            
+            return; // スクリプトの残りを停止
+        } else {
+            // 万が一 .page-wrapper が見つからない場合のフォールバック
+            document.body.innerHTML = "<h1>エラー: 回答データが見つかりません。</h1><p>診断を最初からやり直してください。</p><a href='index.html'>トップページに戻る</a>";
+            return;
+        }
     }
+    // ★★★ エラー処理ここまで ★★★
+    
     const userAnswers = JSON.parse(answersString);
 
     // ★ 診断が完了したので、ここで診断履歴（quizAnswers）は削除する
@@ -658,8 +687,9 @@ window.addEventListener('DOMContentLoaded', async () => {
             const overlay = document.getElementById('animation-overlay');
             
             // ★★★ バグ修正: Lottieライブラリの正しいチェック方法 ★★★
+            // 'lottie-player' がカスタム要素として定義されているかを確認
             if (!overlay || !window.customElements.get('lottie-player')) { 
-                 console.warn("Lottie player not found, skipping animation.");
+                 console.warn("Lottie player not found (window.customElements.get('lottie-player') is false), skipping animation.");
                  return resolve(); // ★ スキップしても処理は続行
             }
 

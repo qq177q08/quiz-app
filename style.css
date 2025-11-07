@@ -68,9 +68,11 @@ h1, h2, h3, h4, h5, p {
 }
 
 /* ===== 3. ★★★ トップページ (hero-section) ★★★ */
+/* ★★★ PCレイアウトを CSS Grid に変更 ★★★ */
 .hero-section {
-    display: flex;
-    /* ★ スマホでも折り返さない (flex-wrap: wrap; を削除) */
+    display: grid;
+    grid-template-columns: 1.5fr 1fr; /* ★ 左(1.5) : 右(1) の比率 */
+    grid-template-rows: auto auto; /* ★ テキスト用とボタン用の2行 */
     align-items: center;
     gap: 30px;
     padding: 40px 0; /* ★ 左右のpaddingを0に (wrapperが担当) */
@@ -79,9 +81,10 @@ h1, h2, h3, h4, h5, p {
 }
 
 .hero-text {
-    flex: 1.5; /* ★ テキストの比率を 1.5 (約60%) に変更 */
-    /* ★ min-width を削除 (スマホで縮小できるように) */
-    text-align: center; /* ★ ボタンを中央揃えにするため、親を中央揃えに */
+    /* ★ PC Grid レイアウト: 1列目 / 1行目 */
+    grid-column: 1;
+    grid-row: 1;
+    text-align: left; /* ★ テキストは左揃え */
     padding-right: 20px;
     box-sizing: border-box;
 }
@@ -92,20 +95,26 @@ h1, h2, h3, h4, h5, p {
     color: #005f73;
     line-height: 1.3;
     margin-bottom: 20px;
-    text-align: left; /* ★ テキストは左揃えに戻す */
+    text-align: left; 
 }
 
 .hero-description {
-    /* ★ フォントサイズと行間を Coursera に合わせる */
     font-size: 1.125em; /* 18px相当 */
     color: #333;
-    margin-bottom: 35px;
-    line-height: 1.6; /* 1.5だと詰まりすぎのため 1.6 に調整 */
-    text-align: left; /* ★ テキストは左揃えに戻す */
+    margin-bottom: 0; /* ★ ボタンとの間隔は .hero-section の gap が担当 */
+    line-height: 1.6; 
+    text-align: left; 
 }
 
 .hero-cta-button {
-    background-color: #0a9396; /* テーマカラーのティール */
+    /* ★ PC Grid レイアウト: 1列目 / 2行目 */
+    grid-column: 1;
+    grid-row: 2;
+    /* ★ PCではボタンを中央揃え */
+    justify-self: center; 
+    text-align: center;
+    
+    background-color: #0a9396; 
     color: white;
     font-size: 1.2em;
     font-weight: bold;
@@ -119,21 +128,21 @@ h1, h2, h3, h4, h5, p {
     box-shadow: 0 4px 15px rgba(10, 147, 150, 0.3);
 }
 .hero-cta-button:hover {
-    background-color: #005f73; /* ホバーで濃い色に */
+    background-color: #005f73; 
     transform: translateY(-2px);
 }
 
-/* ★★★ 画像コンテナのスタイルを変更 ★★★ */
 .hero-image-placeholder {
-    flex: 1; /* ★ 画像の比率を 1 (約40%) に変更 */
-    /* ★ min-width を削除 (スマホで縮小できるように) */
+    /* ★ PC Grid レイアウト: 2列目 / 1行目から2行目まで結合 */
+    grid-column: 2;
+    grid-row: 1 / span 2; /* ★ 1行目から2行分 */
+
     min-height: 350px;
     background-color: transparent; /* ★ 背景色を透明に */
     border-radius: 8px;
     overflow: hidden; /* ★ 角丸のために必須 */
 }
 
-/* ★★★ Lottie Player のスタイルを追加 ★★★ */
 .hero-image-placeholder lottie-player {
     width: 100%;
     height: 100%;
@@ -782,36 +791,51 @@ h1, h2, h3, h4, h5, p {
     
     /* ★ ヒーローセクションのレスポンシブ */
     .hero-section {
+        /* ★★★ スマホでは縦積みに変更 ★★★ */
+        display: flex;
+        flex-direction: column; 
+        gap: 30px; /* ★ 隙間を広げる */
         padding: 30px 0px; 
-        /* ★ flex-direction: column; を削除し、2カラムを維持 */
-        gap: 15px; /* ★ スマホではカラム間の隙間を狭く */
     }
     .hero-text {
-        padding-right: 0; /* ★ 右のpaddingを削除 */
-        /* ★ text-align: center; (デスクトップから継承) */
-        flex: 1.5; /* ★ スマホでもテキストの比率を優先 */
+        /* ★ PC用の grid, flex を解除 (order: 1) */
+        grid-column: auto;
+        grid-row: auto;
+        order: 1; 
+        padding-right: 0; 
+        text-align: center; 
     }
-    /* ★ text-align: left; (デスクトップから継承) */
-
     .hero-catch-copy {
-        font-size: 1.4em; /* ★ 2カラム維持のためフォントを小さく */
+        font-size: 1.8em; /* ★ 縦積みにしたのでフォントを戻す */
+        text-align: left; /* ★ 依頼通り左揃え */
     }
     .hero-description {
-        font-size: 0.9em; /* ★ 2カラム維持のためフォントを小さく */
-        margin-bottom: 25px; /* ★ ボタンとの間隔を少し詰める */
+        font-size: 1.0em; /* ★ 縦積みにしたのでフォントを戻す */
+        text-align: left; /* ★ 依頼通り左揃え */
+        text-indent: 1em; /* ★ 依頼通りインデント */
     }
     .hero-image-placeholder {
-        min-height: 150px; /* ★ 高さを調整 */
-        height: 150px; /* ★ 高さを固定 */
-        flex: 1; /* ★ スマホでも画像の比率を 1 に */
+        /* ★ PC用の grid を解除 (order: 2) */
+        grid-column: auto;
+        grid-row: auto;
+        order: 2; 
+        min-height: 300px; /* ★★★ 200px から 300px に変更 ★★★ */
+        height: 300px; /* ★★★ 200px から 300px に変更 ★★★ */
+        width: 100%;
     }
-    .hero-image-placeholder lottie-player { /* ★ img から lottie-player に変更 */
-        height: 150px; /* ★ 高さを固定 */
+    .hero-image-placeholder lottie-player {
+        height: 300px; /* ★★★ 200px から 300px に変更 ★★★ */
     }
     .hero-cta-button {
-        font-size: 1.0em; /* ★ ボタンも小さく */
-        padding: 12px 20px;
+        /* ★ PC用の grid を解除 (order: 3) */
+        grid-column: auto;
+        grid-row: auto;
+        order: 3;
+        justify-self: center; /* ★ 中央揃え */
+        font-size: 1.1em; /* ★ フォントサイズを調整 */
+        padding: 15px 30px; /* ★ paddingを調整 */
     }
+
 
     /* ★ 診断ページ (Focus Mode) のレスポンシブ */
     .quiz-container {

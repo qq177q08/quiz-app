@@ -509,15 +509,52 @@ h1, h2, h3, h4, h5, p {
     padding: 0;
     margin: 0;
 }
+/* ★★★ PC用の answer-item スタイル修正 ★★★ */
 .answer-item {
-    display: flex;
-    justify-content: space-between;
+    display: flex; /* PCでは flex */
+    /* justify-content: space-between; */ /* ★★★ 削除 (これが悪さをしていた) */
     align-items: flex-start;
     padding: 12px 20px;
     border-bottom: 1px solid #f0f0f0;
-    gap: 15px;
+    gap: 15px; /* ★ この gap が間隔を制御する */
     cursor: pointer;
     transition: background-color 0.2s ease;
+}
+.answer-label {
+    font-weight: bold;
+    font-size: 0.95em;
+    color: #333;
+    flex: 0 0 140px; /* PCでは幅固定 */
+    text-align: left;
+    line-height: 1.5;
+    margin: 0; /* スマホ用のマージンをリセット */
+}
+/* ★★★ 新規：PC用の .answer-row ★★★ */
+.answer-row {
+    flex-grow: 1; /* ★ 残りの幅をすべて取る */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+}
+.answer-choice {
+    font-size: 0.9em;
+    color: #555;
+    flex-grow: 1; /* ★ 選択肢が伸びる */
+    padding: 0;
+    text-align: left;
+    line-height: 1.5;
+}
+/* ★ ランク表示のスタイルを統一 */
+.answer-rank, .answer-rank-na {
+    font-size: 0.95em;
+    font-weight: bold;
+    flex-shrink: 0; /* ★ ランクは縮まない */
+    min-width: 60px;
+    text-align: center;
+    padding: 2px 5px;
+    box-sizing: border-box;
+    line-height: 1.5;
 }
 /* ★ Dランクのハイライトスタイル */
 .answer-item.rank-d-highlight {
@@ -527,39 +564,6 @@ h1, h2, h3, h4, h5, p {
 }
 .answer-item:last-child { border-bottom: none; }
 .answer-item:hover { background-color: #f8f9fa; }
-.answer-label {
-    font-weight: bold;
-    font-size: 0.95em;
-    color: #333;
-    flex: 0 0 140px;
-    text-align: left;
-    line-height: 1.5;
-}
-.answer-choice {
-    font-size: 0.9em;
-    color: #555;
-    flex-grow: 1;
-    padding: 0;
-    text-align: left;
-    line-height: 1.5;
-}
-/* ★ ランク表示のスタイルを統一 */
-.answer-rank, .answer-rank-na {
-    font-size: 0.95em;
-    font-weight: bold;
-    flex-shrink: 0;
-    min-width: 60px;
-    text-align: center;
-    padding: 2px 5px;
-    box-sizing: border-box;
-    line-height: 1.5;
-}
-.answer-rank {
-    color: #333; /* 黒文字 */
-}
-.answer-rank-na {
-    color: #777; /* グレー文字 */
-}
 
 
 /* 自由記述欄の表示エリア */
@@ -801,7 +805,7 @@ h1, h2, h3, h4, h5, p {
         height: 150px; /* ★ 高さを固定 */
         flex: 1; /* ★ スマホでも画像の比率を 1 に */
     }
-    .hero-image-placeholder img {
+    .hero-image-placeholder lottie-player { /* ★ img から lottie-player に変更 */
         height: 150px; /* ★ 高さを固定 */
     }
     .hero-cta-button {
@@ -861,6 +865,7 @@ h1, h2, h3, h4, h5, p {
     }
     .chart-container {
         height: 300px; /* スマホではチャートを少し小さく */
+        min-width: 0; /* ★★★ レーダーチャートのはみ出し修正 ★★★ */
     }
     .detailed-results-section {
         padding: 0 20px; /* スマホ用のpadding */
@@ -873,12 +878,52 @@ h1, h2, h3, h4, h5, p {
         font-size: 1.1em;
     }
 
+    /* ★★★ アコーディオン詳細リストのレイアウト修正 ★★★ */
+    .answer-item {
+        display: block; /* ★ flex-wrap から block に変更 */
+        padding: 10px 15px;
+    }
+    .answer-label {
+        display: block;
+        flex: none; /* ★ PC用の flex: 0 0 140px を解除 */
+        width: 100%; /* ★ 幅を100%に */
+        font-size: 1.0em;
+        margin-bottom: 8px; /* ★ 選択肢との間に余白 */
+    }
+    /* ★★★ 新規：選択肢とランクを囲う行 ★★★ */
+    .answer-row {
+        display: flex; /* ★ 選択肢とランクを横並びにする */
+        justify-content: space-between; /* ★ 左右に振り分け */
+        align-items: center; /* ★ 中央揃え */
+        gap: 15px;
+    }
+    .answer-choice {
+        flex-grow: 1;
+        font-size: 0.95em;
+        text-align: left;
+    }
+    .answer-rank, .answer-rank-na {
+        flex-shrink: 0;
+        min-width: 50px;
+        text-align: right;
+    }
+
+
     .concerns-section {
         padding: 0 20px; /* スマホ用のpadding */
         margin-bottom: 20px;
     }
+    /* ★★★ スマホでのフッターボタン修正 ★★★ */
     .result-footer-buttons {
         padding: 20px; /* スマホ用のpadding */
+        flex-direction: column; /* ★ ボタンを縦積みに変更 */
+        gap: 15px; /* ★ ボタン間の隙間 */
+    }
+    .result-footer-buttons .back-button,
+    .result-footer-buttons .next-button {
+        width: 100%; /* ★ ボタンを全幅に */
+        box-sizing: border-box; /* ★ paddingを含めて全幅に */
+        margin: 0; /* ★ マージンをリセット */
     }
 
 

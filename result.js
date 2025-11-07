@@ -319,11 +319,14 @@ window.addEventListener('DOMContentLoaded', async () => {
                 }
             }
 
+            // ★★★ HTML構造を .answer-row でラップ ★★★
             answerListHtml += `
                 <li class="answer-item ${itemClass}" data-question-id="${answer.questionId}">
                     <span class="answer-label">${answer.label.replace(/Q\d+\s/, '')}</span>
-                    <span class="answer-choice">${cleanedSelectedText}</span>
-                    ${rankDisplayHtml}
+                    <div class="answer-row">
+                        <span class="answer-choice">${cleanedSelectedText}</span>
+                        ${rankDisplayHtml}
+                    </div>
                 </li>
             `;
         });
@@ -606,7 +609,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         }, 1000);
     });
 
-    // --- 9. "トップに戻る" ボタンの処理 ---
+    // --- 10. "トップに戻る" ボタンの処理 ---
     const backToTopButton = document.querySelector('.result-footer-buttons .next-button');
     if (backToTopButton) {
         backToTopButton.addEventListener('click', (event) => {
@@ -621,7 +624,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // --- 10. ★★★ スコア・カウントアップ関数 ★★★
+    // --- 11. ★★★ スコア・カウントアップ関数 ★★★
     function animateCountUp(element, finalValue) {
         let start = 0;
         const duration = 1500; // 1.5秒
@@ -649,11 +652,16 @@ window.addEventListener('DOMContentLoaded', async () => {
         requestAnimationFrame(update);
     }
 
-    // --- 11. ★★★ Lottie アニメーション再生関数 ★★★
+    // --- 12. ★★★ Lottie アニメーション再生関数 ★★★
     function playRankAnimation(rank) {
         return new Promise((resolve) => {
             const overlay = document.getElementById('animation-overlay');
-            if (!overlay) return resolve();
+            
+            // ★★★ バグ修正: Lottieライブラリの正しいチェック方法 ★★★
+            if (!overlay || !window.customElements.get('lottie-player')) { 
+                 console.warn("Lottie player not found, skipping animation.");
+                 return resolve(); // ★ スキップしても処理は続行
+            }
 
             let animationFile = 'c_rank.json'; // デフォルト (C)
             if (rank === 'S') animationFile = 's_rank.json';
@@ -691,6 +699,13 @@ window.addEventListener('DOMContentLoaded', async () => {
             player.addEventListener('complete', () => {
                 clearTimeout(timer); // 時間差発火をキャンセル
                 onComplete();
+            });
+            
+            // ★ Lottie読み込み失敗時
+            player.addEventListener('error', () => {
+                 console.error("Lottie animation file not found:", animationFile);
+                 clearTimeout(timer);
+                 onComplete();
             });
         });
     }

@@ -606,34 +606,6 @@ h1, h2, h3, h4, h5, p {
 .rank-bg-d { background-color: #dc3545; }
 
 
-/* ===== 7. モーダル（ポップアップ） ===== */
-.modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); display: flex;
-    justify-content: center; align-items: center;
-    opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
-    z-index: 1000;
-}
-.modal-content {
-    background-color: #ffffff; padding: 30px; border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); width: 90%; max-width: 600px;
-    text-align: left; transform: scale(0.9); transition: transform 0.3s ease;
-}
-.modal-overlay.visible { opacity: 1; visibility: visible; }
-.modal-overlay.visible .modal-content { transform: scale(1); }
-.modal-header {
-    display: flex; justify-content: space-between; align-items: center;
-    border-bottom: 1px solid #dee2e6; padding-bottom: 15px; margin-bottom: 20px;
-}
-.modal-header h4 { color: #005f73; font-size: 1.3em; margin: 0; }
-.modal-close-button {
-    font-size: 1.8em; font-weight: bold; color: #aaa; background: none;
-    border: none; cursor: pointer; line-height: 1;
-}
-.modal-close-button:hover { color: #333; }
-.modal-body p { font-size: 1.1em; line-height: 1.7; margin: 0; }
-
-
 /* ===== 8. ★★★ 結果ページフッター ★★★ */
 .result-footer-buttons {
     display: flex;
@@ -956,31 +928,4 @@ h1, h2, h3, h4, h5, p {
         flex-direction: column; /* フッターは縦積みに変更 */
         gap: 15px;
     }
-}
-
-/* ===== 12. ★★★ Lottie アニメーションオーバーレイ ★★★ */
-#animation-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.95); /* 半透明の白 */
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    opacity: 0; /* 初期状態は非表示 */
-    visibility: hidden;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
-}
-#animation-overlay.is-visible {
-    opacity: 1;
-    visibility: visible;
-}
-#animation-overlay.fade-out {
-    opacity: 0;
-    visibility: hidden;
 }

@@ -1,19 +1,6 @@
 window.addEventListener('DOMContentLoaded', async () => {
-    // --- 0. モーダルウィンドウのHTMLをページに追加 ---
-    const modalHtml = `
-        <div class="modal-overlay" id="question-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 id="modal-question-number"></h4>
-                    <button class="modal-close-button" id="modal-close">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <p id="modal-question-text"></p>
-                </div>
-            </div>
-        </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    // ★★★ HTML挿入処理を削除 (HTML側に記述済みのため) ★★★
 
     // モーダルの要素を取得
     const modalOverlay = document.getElementById('question-modal');
@@ -25,10 +12,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     const closeModal = () => {
         modalOverlay.classList.remove('visible');
     };
-    modalCloseButton.addEventListener('click', closeModal);
-    modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) { closeModal(); }
-    });
+    if (modalCloseButton) { // エラー回避のためのチェック
+        modalCloseButton.addEventListener('click', closeModal);
+    }
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) { closeModal(); }
+        });
+    }
 
     // --- 1. データの取得と準備 ---
     const answersString = sessionStorage.getItem('quizAnswers');

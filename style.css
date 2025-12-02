@@ -68,24 +68,25 @@ h1, h2, h3, h4, h5, p {
 }
 
 /* ===== 3. ★★★ トップページ (hero-section) ★★★ */
-/* ★★★ PCレイアウトを CSS Grid に変更 ★★★ */
 .hero-section {
     display: grid;
-    grid-template-columns: 1.5fr 1fr; /* ★ 左(1.5) : 右(1) の比率 */
-    grid-template-rows: auto auto; /* ★ テキスト用とボタン用の2行 */
+    grid-template-areas: 
+        "text image"
+        "btn  image";
+    grid-template-columns: 1.5fr 1fr; 
+    grid-template-rows: auto auto;    
     align-items: center;
-    gap: 30px;
-    padding: 40px 0; /* ★ 左右のpaddingを0に (wrapperが担当) */
+    gap: 20px 40px; 
+    padding: 40px 0;
     margin-top: 20px;
-    overflow: hidden; /* 画像の角を丸めるため */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .hero-text {
-    /* ★ PC Grid レイアウト: 1列目 / 1行目 */
-    grid-column: 1;
-    grid-row: 1;
-    text-align: left; /* ★ テキストは左揃え */
-    padding-right: 20px;
+    grid-area: text; 
+    text-align: left;
+    padding-right: 0;
     box-sizing: border-box;
 }
 
@@ -99,20 +100,16 @@ h1, h2, h3, h4, h5, p {
 }
 
 .hero-description {
-    font-size: 1.125em; /* 18px相当 */
+    font-size: 1.125em; 
     color: #333;
-    margin-bottom: 0; /* ★ ボタンとの間隔は .hero-section の gap が担当 */
+    margin-bottom: 0; 
     line-height: 1.6; 
     text-align: left; 
 }
 
 .hero-cta-button {
-    /* ★ PC Grid レイアウト: 1列目 / 2行目 */
-    grid-column: 1;
-    grid-row: 2;
-    /* ★ PCではボタンを中央揃え */
-    justify-self: center; 
-    text-align: center;
+    grid-area: btn; 
+    justify-self: start; 
     
     background-color: #0a9396; 
     color: white;
@@ -126,6 +123,7 @@ h1, h2, h3, h4, h5, p {
     text-decoration: none;
     display: inline-block;
     box-shadow: 0 4px 15px rgba(10, 147, 150, 0.3);
+    margin-top: 10px;
 }
 .hero-cta-button:hover {
     background-color: #005f73; 
@@ -133,31 +131,30 @@ h1, h2, h3, h4, h5, p {
 }
 
 .hero-image-placeholder {
-    /* ★ PC Grid レイアウト: 2列目 / 1行目から2行目まで結合 */
-    grid-column: 2;
-    grid-row: 1 / span 2; /* ★ 1行目から2行分 */
-
+    grid-area: image; 
     min-height: 350px;
-    background-color: transparent; /* ★ 背景色を透明に */
+    background-color: transparent; 
     border-radius: 8px;
-    overflow: hidden; /* ★ 角丸のために必須 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; 
 }
 
 .hero-image-placeholder lottie-player {
     width: 100%;
     height: 100%;
-    display: block; /* 余白を削除 */
+    display: block;
 }
 
 
 /* ===== 4. ★★★ 診断画面 (.quiz-container) ★★★ */
-/* ★ 画面上部固定プログレスバー */
 .fixed-progress-bar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 8px; /* 細いラインにする */
+    height: 8px;
     background-color: #e0e0e0;
     z-index: 2000;
 }
@@ -166,11 +163,10 @@ h1, h2, h3, h4, h5, p {
     background-color: #0a9396;
     transition: width 0.3s ease;
 }
-/* ★ (旧 .progress-bar は削除) */
 
 .quiz-container { 
-    max-width: 700px; /* 質問の読みやすい幅に制限 */
-    margin: 40px auto; /* 上下マージン、左右中央 */
+    max-width: 700px;
+    margin: 40px auto;
     padding: 20px;
     text-align: left; 
     box-sizing: border-box;
@@ -182,7 +178,7 @@ h1, h2, h3, h4, h5, p {
 }
 
 .quiz-content {
-    min-height: 350px; /* 高さを少し調整 */
+    min-height: 350px;
     display: flex;
     flex-direction: column;
 }
@@ -190,19 +186,18 @@ h1, h2, h3, h4, h5, p {
     font-size: 1.8em; 
     color: #005f73; 
     margin-bottom: 10px; 
-    text-align: center; /* 中央揃え */
+    text-align: center;
 }
 .question-text {
-    font-size: 1.3em; /* ★ フォントサイズを大きく */
+    font-size: 1.3em;
     line-height: 1.7;
     margin-bottom: 30px;
     min-height: 4em;
     display: flex;
     align-items: center;
     color: #111;
-    text-align: left; /* ★★★ 中央揃えから左揃えに変更 */
-    /* justify-content: center; */ /* ← 削除 */
-    text-indent: 1em; /* ★★★ 1文字インデントを追加 */
+    text-align: left;
+    text-indent: 1em;
     width: 100%;
 }
 .choices { 
@@ -212,194 +207,96 @@ h1, h2, h3, h4, h5, p {
     width: 100%;
 }
 
-/* ★★★ 選択肢をボタン風に変更 ★★★ */
-.choice-item {
-    position: relative; /* inputを非表示にするため */
-}
+.choice-item { position: relative; }
 
 .choice-item label {
-    display: block; /* ★ flex から block に変更 */
+    display: block;
     background-color: #f8f9fa; 
     border: 1px solid #dee2e6;
     border-radius: 5px; 
-    padding: 18px 20px; /* ★ 選択肢の padding (基本) */
+    padding: 18px 20px;
     cursor: pointer; 
     transition: background-color 0.3s, border-color 0.3s, transform 0.2s ease, padding 0.1s ease;
-    text-align: left; /* ★ テキストは左揃え */
+    text-align: left;
     width: 100%;
     box-sizing: border-box;
 }
 .choice-item input[type="radio"] { 
-    /* ★ ラジオボタン本体は非表示 (opacity: 0 でもOK) */
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
+    position: absolute; opacity: 0; width: 0; height: 0;
 }
 .choice-item label span {
-    flex-grow: 1;
-    line-height: 1.7;
-    font-size: 1.05em;
-    color: #333;
+    flex-grow: 1; line-height: 1.7; font-size: 1.05em; color: #333;
 }
-/* ★ 選択肢の :hover と JSによる選択中スタイル */
 .choice-item label:hover { 
-    background-color: #e0f7fa; 
-    border-color: #0a9396;
-    transform: translateY(-2px);
+    background-color: #e0f7fa; border-color: #0a9396; transform: translateY(-2px);
 }
-/* ★ JSで付与する選択中スタイル (クリック時のフィードバック) */
-.choice-item label.choice-selected {
-    background-color: #f0fafa; /* ★★★ 超薄いテーマカラー（サッパリ） */
-    border-color: #0a9396; /* ★★★ テーマカラーのボーダー */
-    border-width: 2px; /* ★★★ 枠を太く */
-    font-weight: bold;
-    padding: 17px 19px; /* ★★★ 枠の太さ分(1px) padding を減らし、ガタツキ防止 */
-}
-/* ★ CSSによる選択中スタイル (戻るボタンなどで復元するため) */
+.choice-item label.choice-selected,
 .choice-item input[type="radio"]:checked + label {
-    background-color: #f0fafa; /* ★★★ 超薄いテーマカラー（サッパリ） */
-    border-color: #0a9396; /* ★★★ テーマカラーのボーダー */
-    border-width: 2px; /* ★★★ 枠を太く */
+    background-color: #f0fafa;
+    border-color: #0a9396;
+    border-width: 2px;
     font-weight: bold;
-    padding: 17px 19px; /* ★★★ 枠の太さ分(1px) padding を減らし、ガタツキ防止 */
+    padding: 17px 19px;
 }
 
 
 /* ===== 5. ★★★ 自由記述欄 (.freetext-container) ★★★ */
 .freetext-container { 
-    max-width: 700px; /* ★ quiz-container と合わせる */
-    margin: 40px auto; /* ★ quiz-container と合わせる */
-    padding: 20px; /* ★ quiz-container と合わせる */
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
     box-sizing: border-box;
     text-align: left; 
 }
 .freetext-container h2 {
-    font-size: 1.8em; /* ★ .question-number と合わせる */
-    color: #005f73; /* ★ .question-number と合わせる */
-    text-align: center; /* ★ .question-number と合わせる */
-    margin-bottom: 20px; /* ★ カテゴリ表示の代わりのマージン */
+    font-size: 1.8em; color: #005f73; text-align: center; margin-bottom: 20px;
 }
 .freetext-container p.description {
-    font-size: 1.3em; /* ★ .question-text と合わせる */
-    line-height: 1.7; /* ★ .question-text と合わせる */
-    color: #111; /* ★ .question-text と合わせる */
-    text-align: left; /* ★ .question-text と合わせる */
-    text-indent: 1em; /* ★ .question-text と合わせる */
-    margin-bottom: 30px; /* ★ .question-text と合わせる */
-    font-weight: normal; /* ★ .question-text と合わせる */
+    font-size: 1.3em; line-height: 1.7; color: #111;
+    text-align: left; text-indent: 1em; margin-bottom: 30px; font-weight: normal;
 }
 .freetext-container textarea {
-    width: 100%;
-    min-height: 150px;
-    box-sizing: border-box;
-    padding: 10px;
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    font-size: 1em;
-    font-family: inherit;
-    margin-bottom: 20px;
-    line-height: 1.7;
+    width: 100%; min-height: 150px; box-sizing: border-box; padding: 10px;
+    border: 1px solid #dee2e6; border-radius: 5px;
+    font-size: 1em; font-family: inherit; margin-bottom: 20px; line-height: 1.7;
 }
 
-/* ★★★ 「トップに戻る」ボタンの色を ティール に変更 ★★★ */
-.next-button { /* 診断中・自由記述欄・結果ページのボタン */
-    background-color: #0a9396; /* ★ 緑からティールに変更 */
-    color: white; 
-    font-size: 1.1em; 
-    font-weight: bold;
-    border: none; 
-    padding: 12px 30px; 
-    border-radius: 5px; 
-    cursor: pointer;
-    transition: background-color 0.3s ease; 
-    display: block;
-    margin: 20px auto 0;
-    width: 200px; 
-    text-align: center; 
-    text-decoration: none;
+.next-button {
+    background-color: #0a9396; color: white; font-size: 1.1em; font-weight: bold;
+    border: none; padding: 12px 30px; border-radius: 5px; cursor: pointer;
+    transition: background-color 0.3s ease; display: block; margin: 20px auto 0;
+    width: 200px; text-align: center; text-decoration: none;
 }
-.next-button:hover { 
-    background-color: #005f73; /* ★ 濃いティールに変更 */
-}
+.next-button:hover { background-color: #005f73; }
 
 .back-button {
-    background-color: #ffffff;
-    color: #555;
-    font-size: 1em;
-    font-weight: bold;
-    border: 1px solid #ccc;
-    padding: 10px 25px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    display: block;
-    margin: 40px auto 0; /* ★ 上マージンを増やし、中央揃えに */
-    width: 150px; /* 幅を固定 */
-    text-align: center;
+    background-color: #ffffff; color: #555; font-size: 1em; font-weight: bold;
+    border: 1px solid #ccc; padding: 10px 25px; border-radius: 5px;
+    cursor: pointer; transition: background-color 0.3s ease, border-color 0.3s ease;
+    display: block; margin: 40px auto 0; width: 150px; text-align: center;
 }
-.back-button:hover:not(:disabled) {
-    background-color: #f8f9fa;
-    border-color: #999;
-}
-.back-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
+.back-button:hover:not(:disabled) { background-color: #f8f9fa; border-color: #999; }
+.back-button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 
 /* ===== 6. ★★★ 結果表示画面 (.result-container) ★★★ */
 .result-container { 
-    max-width: 100%; 
-    /* ★ container から 白背景・影 を継承 */
-    padding: 0; /* ★ バナーを全幅にするため、コンテナのpaddingを削除 */
+    max-width: 100%; padding: 0;
 }
-.result-container h2 { 
-    /* ★ このh2は削除された (バナーが代わり) */
-    text-align: center; color: #005f73; 
-    margin-bottom: 30px; 
-} 
-
-/* ★★★ 新規：ランク別ヒーローバナー ★★★ */
 .result-banner {
-    padding: 30px 40px;
-    border-radius: 10px 10px 0 0; /* コンテナの左上・右上の角丸 */
-    color: white;
-    text-align: center;
-    margin-bottom: 30px; /* バナーと総合コメントの間に余白 */
+    padding: 30px 40px; border-radius: 10px 10px 0 0; color: white;
+    text-align: center; margin-bottom: 30px;
 }
-.result-banner p {
-    font-size: 1.3em;
-    font-weight: bold;
-    margin: 0 0 10px 0;
-}
+.result-banner p { font-size: 1.3em; font-weight: bold; margin: 0 0 10px 0; }
 .result-banner h3 {
-    font-size: 3.0em;
-    font-weight: 900;
-    margin: 0;
-    /* ★★★ スコアのフォントを固定幅に (カウントアップ用) ★★★ */
+    font-size: 3.0em; font-weight: 900; margin: 0;
     font-variant-numeric: tabular-nums;
 }
-/* ★★★ (旧 .score-display は .result-banner に統合) ★★★ */
-#score-value { font-size: 3.0em; color: white; margin: 0; }
-#rank-text { font-weight: bold; font-size: 1.3em; margin-bottom: 10px;}
 
-
-/* 総合評価エリア (スコア＋コメント＋チャート) */
-.overall-result-area {
-    /* ★ flex を解除 (ダッシュボード形式に変更) */
-    margin-bottom: 40px;
-    padding: 0 30px; /* ★ コンテナのpaddingをこちらで代替 */
-}
-
+.overall-result-area { margin-bottom: 40px; padding: 0 30px; }
 .chart-container {
-    /* ★ flex: 1.5; を削除 (全幅に変更) */
-    min-width: 350px;
-    width: 100%; /* ★ 全幅 */
-    max-width: 600px; /* ★ ただし中央で最大幅を指定 */
-    height: 400px;
-    margin: 30px auto; /* ★ 上下マージンと中央揃え */
-    position: relative;
+    min-width: 350px; width: 100%; max-width: 600px; height: 400px;
+    margin: 30px auto; position: relative;
 }
 #radar-chart { max-width: 100%; max-height: 100%; }
 
@@ -411,521 +308,261 @@ h1, h2, h3, h4, h5, p {
     color: #005f73; margin-bottom: 10px; font-size: 1.2em;
     border-bottom: 1px solid #ccc; padding-bottom: 5px;
 }
-/* ★★★ 総合コメントにインデントを追加 ★★★ */
-#overall-comment-text { 
-    font-size: 1em; 
-    line-height: 1.7; 
-    margin-bottom: 0;
-    text-indent: 1em;
-}
-#overall-comment-text strong {
-    color: inherit;
-    font-weight: 900;
-}
+#overall-comment-text { font-size: 1em; line-height: 1.7; margin-bottom: 0; text-indent: 1em; }
+#overall-comment-text strong { color: inherit; font-weight: 900; }
 
-/* ===== 6b. ★★★ 詳細結果ヒートマップ（アコーディオン） ★★★ */
-.detailed-results-section {
-    padding: 0 30px; /* ★ コンテナのpaddingをこちらで代替 */
-}
+
+/* ===== 6b. 詳細結果（アコーディオン） ===== */
+.detailed-results-section { padding: 0 30px; }
 .detailed-results-section h4 {
-    border-bottom: 2px solid #005f73; padding-bottom: 5px;
-    margin-bottom: 20px; font-size: 1.3em;
+    border-bottom: 2px solid #005f73; padding-bottom: 5px; margin-bottom: 20px; font-size: 1.3em;
 }
 .result-card {
-    background-color: #ffffff; 
-    border: 1px solid #dee2e6; 
-    border-radius: 8px;
-    margin-bottom: 15px; /* ★ 間隔を少し詰める */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
-    overflow: hidden; /* ★ アニメーションのために必須 */
-    transition: all 0.3s ease;
+    background-color: #ffffff; border: 1px solid #dee2e6; border-radius: 8px;
+    margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+    overflow: hidden; transition: all 0.3s ease;
 }
 .card-header {
-    display: flex; 
-    align-items: center; 
-    padding: 15px 40px 15px 20px; /* ★★★ 右に 40px の余白を追加 (アイコン用) */
-    background-color: #f8f9fa; /* ★ デフォルトのヘッダー色 */
-    border-bottom: 1px solid #dee2e6;
-    cursor: pointer; /* ★ クリック可能を示す */
-    position: relative; /* ★ 開閉アイコンのため */
-    transition: background-color 0.2s ease;
+    display: flex; align-items: center; padding: 15px 40px 15px 20px;
+    background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;
+    cursor: pointer; position: relative; transition: background-color 0.2s ease;
 }
-/* ★ 閉じた状態でのホバー */
-.result-card:not(.is-open) .card-header:hover {
-    background-color: #f0f0f0;
-}
-/* ★ 開閉アイコン (▼) */
+.result-card:not(.is-open) .card-header:hover { background-color: #f0f0f0; }
 .card-header::after {
-    content: '▼';
-    font-size: 1em;
-    color: #777;
-    position: absolute;
-    right: 20px; /* ★ 右の余白(40px)の内側に配置 */
-    top: 50%;
-    transform: translateY(-50%) rotate(0deg);
+    content: '▼'; font-size: 1em; color: #777; position: absolute;
+    right: 20px; top: 50%; transform: translateY(-50%) rotate(0deg);
     transition: transform 0.3s ease-out;
 }
-.result-card.is-open .card-header::after {
-    transform: translateY(-50%) rotate(180deg);
-}
+.result-card.is-open .card-header::after { transform: translateY(-50%) rotate(180deg); }
 
 .card-header .title-block { flex-grow: 1; text-align: left; }
-.card-header .category-name {
-    font-weight: bold; font-size: 1.2em; color: #005f73; margin: 0;
-}
-/* ★★★ ランクブロックのスタイルを修正 (色を削除) ★★★ */
+.card-header .category-name { font-weight: bold; font-size: 1.2em; color: #005f73; margin: 0; }
 .card-header .rank-block {
-    font-size: 1.1em;
-    font-weight: bold; /* ★ 太字に */
-    padding: 5px 0px; /* ★ 左右paddingを削除 */
-    border-radius: 5px;
-    color: #333; /* ★ 白から黒に変更 */
-    white-space: nowrap;
+    font-size: 1.1em; font-weight: bold; padding: 5px 0px;
+    border-radius: 5px; color: #333; white-space: nowrap;
 }
-.card-header .rank-percentage {
-    font-size: 0.9em;
-    font-weight: normal;
-    color: #555;
-    margin-left: 8px;
-}
-.card-header .rank-block-na {
-     font-size: 1.1em;
-     font-weight: normal;
-     color: #777;
-     white-space: nowrap;
-     padding: 5px 0;
-     margin-left: 15px;
-}
+.card-header .rank-percentage { font-size: 0.9em; font-weight: normal; color: #555; margin-left: 8px; }
+.card-header .rank-block-na { font-size: 1.1em; font-weight: normal; color: #777; padding: 5px 0; margin-left: 15px; }
+
 .card-body { 
-    padding: 0; 
-    /* ★★★ アコーディオンのスタイル ★★★ */
-    max-height: 0;
-    overflow: hidden;
+    padding: 0; max-height: 0; overflow: hidden;
     transition: max-height 0.4s ease-out, padding 0.4s ease-out;
 }
 .result-card.is-open .card-body {
-    max-height: 1500px; /* ★ 十分な高さを指定 */
-    padding: 10px 0; /* ★ 開いたときに上下の余白を追加 */
-    transition: max-height 0.6s ease-in, padding 0.4s ease-in;
+    max-height: 1500px; padding: 10px 0; transition: max-height 0.6s ease-in, padding 0.4s ease-in;
 }
 
-/* ★★★ ヒートマップ (色指定) のセクションを削除 ★★★ */
-
-
-/* 回答詳細リスト */
-.answer-detail-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-/* ★★★ PC用の answer-item スタイル修正 ★★★ */
+.answer-detail-list { list-style-type: none; padding: 0; margin: 0; }
 .answer-item {
-    display: flex; /* PCでは flex */
-    /* justify-content: space-between; */ /* ★★★ 削除 (これが悪さをしていた) */
-    align-items: flex-start;
-    padding: 12px 20px;
-    border-bottom: 1px solid #f0f0f0;
-    gap: 15px; /* ★ この gap が間隔を制御する */
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 12px 20px; border-bottom: 1px solid #f0f0f0; gap: 15px;
+    cursor: pointer; transition: background-color 0.2s ease;
 }
 .answer-label {
-    font-weight: bold;
-    font-size: 0.95em;
-    color: #333;
-    flex: 0 0 140px; /* PCでは幅固定 */
-    text-align: left;
-    line-height: 1.5;
-    margin: 0; /* スマホ用のマージンをリセット */
+    font-weight: bold; font-size: 0.95em; color: #333;
+    flex: 0 0 140px; text-align: left; line-height: 1.5; margin: 0;
 }
-/* ★★★ 新規：PC用の .answer-row ★★★ */
 .answer-row {
-    flex-grow: 1; /* ★ 残りの幅をすべて取る */
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 15px;
+    flex-grow: 1; display: flex; justify-content: space-between;
+    align-items: flex-start; gap: 15px;
 }
 .answer-choice {
-    font-size: 0.9em;
-    color: #555;
-    flex-grow: 1; /* ★ 選択肢が伸びる */
-    padding: 0;
-    text-align: left;
-    line-height: 1.5;
+    font-size: 0.9em; color: #555; flex-grow: 1; padding: 0; text-align: left; line-height: 1.5;
 }
-/* ★ ランク表示のスタイルを統一 */
 .answer-rank, .answer-rank-na {
-    font-size: 0.95em;
-    font-weight: bold;
-    flex-shrink: 0; /* ★ ランクは縮まない */
-    min-width: 60px;
-    text-align: center;
-    padding: 2px 5px;
-    box-sizing: border-box;
-    line-height: 1.5;
+    font-size: 0.95em; font-weight: bold; flex-shrink: 0; min-width: 60px;
+    text-align: center; padding: 2px 5px; box-sizing: border-box; line-height: 1.5;
 }
-/* ★ Dランクのハイライトスタイル */
 .answer-item.rank-d-highlight {
-    background-color: #fff5f5; /* 薄い赤色 */
-    border-left: 4px solid #dc3545; /* 左側に赤いボーダー */
-    padding-left: 16px; /* ボーダー分の余白調整 */
+    background-color: #fff5f5; border-left: 4px solid #dc3545; padding-left: 16px;
 }
 .answer-item:last-child { border-bottom: none; }
 .answer-item:hover { background-color: #f8f9fa; }
 
+.concerns-section { padding: 0 30px; margin-bottom: 30px; }
+.concerns-section .inner-box {
+    text-align: left; background-color: #fdfaee; border: 1px solid #faeac7;
+    border-radius: 8px; padding: 20px 25px;
+}
+.concerns-section h4 { color: #005f73; margin-bottom: 10px; }
+#concerns-text { font-size: 1em; line-height: 1.7; margin: 0; white-space: pre-wrap; }
 
-/* 自由記述欄の表示エリア */
-.concerns-section {
-    padding: 0 30px; /* ★ コンテナのpaddingをこちらで代替 */
-    margin-bottom: 30px; /* ★ フッターボタンとの間隔 */
-}
-.concerns-section .inner-box { /* ★ 背景色用のインナーボックス */
-    text-align: left;
-    background-color: #fdfaee;
-    border: 1px solid #faeac7;
-    border-radius: 8px;
-    padding: 20px 25px;
-}
-.concerns-section h4 {
-    color: #005f73;
-    margin-bottom: 10px;
-}
-#concerns-text {
-    font-size: 1em;
-    line-height: 1.7;
-    margin: 0;
-    white-space: pre-wrap;
-}
-
-/* ★★★ ランク表示用の背景色 (バナー/ランク表示にのみ使用) ★★★ */
-.rank-bg-s { background-color: #28a745; } /* ★ 紫から緑に変更 */
+/* ランク別バナー色 */
+.rank-bg-s { background-color: #28a745; }
 .rank-bg-a { background-color: #28a745; }
 .rank-bg-b { background-color: #0a9396; }
 .rank-bg-c { background-color: #dc3545; }
 .rank-bg-d { background-color: #dc3545; }
 
 
-/* ===== 8. ★★★ 結果ページフッター ★★★ */
+/* ===== 7. モーダル（ポップアップ） ===== */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    /* ★★★ 初期状態を display: none に変更 (×残りを防止) ★★★ */
+    display: none; 
+    justify-content: center; align-items: center;
+    z-index: 1000;
+    /* transition は display では効かないため削除 */
+}
+.modal-overlay.visible { 
+    display: flex; /* visibleクラスがついたら flex で表示 */
+}
+
+.modal-content {
+    background-color: #ffffff; padding: 30px; border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); width: 90%; max-width: 600px;
+    text-align: left;
+}
+.modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid #dee2e6; padding-bottom: 15px; margin-bottom: 20px;
+}
+.modal-header h4 { color: #005f73; font-size: 1.3em; margin: 0; }
+.modal-close-button {
+    font-size: 1.8em; font-weight: bold; color: #aaa; background: none;
+    border: none; cursor: pointer; line-height: 1;
+}
+.modal-close-button:hover { color: #333; }
+.modal-body p { font-size: 1.1em; line-height: 1.7; margin: 0; }
+
+
+/* ===== 8. 結果フッターボタン ===== */
 .result-footer-buttons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 40px;
-    border-top: 1px solid #eee;
-    padding: 30px; /* ★ コンテナのpaddingをこちらで代替 */
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 40px; border-top: 1px solid #eee; padding: 30px;
 }
-
-.result-footer-buttons .next-button {
-    margin: 0;
-}
-/* ★★★ PDF保存ボタンの色を ダークティール に変更 ★★★ */
+.result-footer-buttons .next-button { margin: 0; }
 .result-footer-buttons .back-button {
-    margin: 0;
-    background-color: #005f73; /* ★ 赤からダークティールに変更 */
-    border-color: #005f73; /* ★ 赤からダークティールに変更 */
-    color: white;
-    font-size: 1em; /* ★ サイズを next-button と合わせるため調整 */
-    padding: 12px 30px; /* ★ サイズを next-button と合わせるため調整 */
+    margin: 0; background-color: #005f73; border-color: #005f73;
+    color: white; font-size: 1em; padding: 12px 30px;
 }
-.result-footer-buttons .back-button:hover:not(:disabled) {
-    background-color: #0a9396; /* ★ メインのティールに変更 */
-}
+.result-footer-buttons .back-button:hover:not(:disabled) { background-color: #0a9396; }
 
-/* ===== 9. 印刷時専用スタイル ===== */
+
+/* ===== 9. 印刷時スタイル ===== */
 @media print {
-    body {
-        padding: 0;
-        margin: 0;
-    }
-    .page-wrapper {
-        padding: 0;
-        margin: 0;
-        width: 100%;
-        max-width: 100%;
-    }
-    .container {
-        box-shadow: none;
-        border: none;
-        width: 100%;
-        max-width: 100%;
-        padding: 0;
-        margin: 0;
-    }
-    .global-header, .result-footer-buttons, .modal-overlay, .global-footer, .fixed-progress-bar {
-        display: none !important;
-    }
-    .hero-section {
-        box-shadow: none;
-        padding: 0;
-    }
-    .hero-image-placeholder {
-        display: none; /* 印刷時は画像を非表示 */
-    }
-    /* ★ 印刷時の結果バナー調整 */
-    .result-banner {
-        padding: 20px;
-        border-radius: 0;
-        color: #000;
-        background-color: #f4f7f6 !important; /* 印刷時は色を無効化 */
-    }
-    .result-banner #score-value, .result-banner #rank-text {
-        color: #000;
-    }
-    /* ★★★ 印刷時はアコーディオンを全て開く ★★★ */
-    .card-body {
-        max-height: none !important;
-        display: block !important;
-        padding: 0;
-    }
-    .card-header::after {
-        display: none; /* 開閉アイコンを非表示 */
-    }
-
-
-    .result-container h2 {
-        font-size: 1.5em;
-    }
-    .overall-result-area {
-        flex-wrap: nowrap;
-        page-break-inside: avoid;
-        padding: 0;
-    }
-    .chart-container {
-        height: 350px;
-    }
-    .detailed-results-section {
-        padding: 0;
-    }
-    .concerns-section {
-        padding: 0;
-    }
-    .result-card {
-        page-break-inside: avoid;
-    }
-    .answer-item {
-        page-break-inside: avoid;
-    }
-    .concerns-section {
-        page-break-before: auto;
-    }
+    body { padding: 0; margin: 0; }
+    .page-wrapper { padding: 0; margin: 0; width: 100%; max-width: 100%; }
+    .container { box-shadow: none; border: none; width: 100%; padding: 0; margin: 0; }
+    .global-header, .result-footer-buttons, .modal-overlay, .global-footer, .fixed-progress-bar { display: none !important; }
+    .hero-section { box-shadow: none; padding: 0; }
+    .hero-image-placeholder { display: none; }
+    .result-banner { padding: 20px; border-radius: 0; color: #000; background-color: #f4f7f6 !important; }
+    .result-banner #score-value, .result-banner #rank-text { color: #000; }
+    .card-body { max-height: none !important; display: block !important; padding: 0; }
+    .card-header::after { display: none; }
+    .overall-result-area, .detailed-results-section, .concerns-section { padding: 0; }
+    .chart-container { height: 350px; }
+    .result-card, .answer-item { page-break-inside: avoid; }
+    .concerns-section { page-break-before: auto; }
 }
 
-/* ===== 10. ★★★ フッタースタイル ★★★ */
+/* ===== 10. フッター ===== */
 .global-footer {
-    width: 100%;
-    max-width: 1000px; /* .page-wrapper と幅を合わせる */
-    margin: 20px auto 0 auto; /* 上部にマージン、左右自動 */
-    padding: 20px 0; /* ★ 左右のpaddingを0に (wrapperが担当) */
-    box-sizing: border-box;
-    color: #777;
-    font-size: 0.9em;
-    border-top: 1px solid #e0e0e0;
-    
-    /* ★ Flexboxで左右配置に変更 */
-    display: flex;
-    justify-content: space-between; /* 左右に振り分け */
-    align-items: center;
-    flex-wrap: wrap; /* スマホで折り返す */
-    gap: 10px;
+    width: 100%; max-width: 1000px; margin: 20px auto 0 auto; padding: 20px 0;
+    box-sizing: border-box; color: #777; font-size: 0.9em; border-top: 1px solid #e0e0e0;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 10px;
 }
-
-.global-footer p {
-    margin: 0; /* pタグのデフォルトマージンをリセット */
-}
-
-.footer-links {
-    display: flex;
-    gap: 15px;
-}
-
-.footer-contact-icon {
-    color: #0a9396; /* アイコンの色 */
-    text-decoration: none;
-    display: block;
-}
-.footer-contact-icon svg {
-    width: 28px; /* アイコンのサイズ */
-    height: 28px;
-    transition: opacity 0.2s ease;
-}
-.footer-contact-icon:hover {
-    color: #005f73; /* ホバー時の色 */
-    opacity: 0.8;
-}
+.global-footer p { margin: 0; }
+.footer-links { display: flex; gap: 15px; }
+.footer-contact-icon { color: #0a9396; text-decoration: none; display: block; }
+.footer-contact-icon svg { width: 28px; height: 28px; transition: opacity 0.2s ease; }
+.footer-contact-icon:hover { color: #005f73; opacity: 0.8; }
 
 
-/* ===== 11. ★★★ レスポンシブ対応 (スマホ表示) ★★★ */
+/* ===== 11. ★★★ スマホレスポンシブ ★★★ */
 @media (max-width: 768px) {
-    .container {
-        padding: 20px;
-    }
+    .container { padding: 20px; }
     
-    /* ★ ヒーローセクションのレスポンシブ */
+    /* --- トップページ (Grid解除 -> Flex縦積み) --- */
     .hero-section {
-        /* ★★★ スマホでは縦積みに変更 ★★★ */
-        display: flex;
+        display: flex; 
         flex-direction: column; 
-        gap: 30px; /* ★ 隙間を広げる */
+        gap: 30px; 
         padding: 30px 0px; 
     }
     .hero-text {
-        /* ★ PC用の grid, flex を解除 (order: 1) */
-        grid-column: auto;
-        grid-row: auto;
         order: 1; 
-        padding-right: 0; 
         text-align: center; 
+        padding-right: 0; 
     }
     .hero-catch-copy {
-        font-size: 1.8em; /* ★ 縦積みにしたのでフォントを戻す */
-        text-align: left; /* ★ 依頼通り左揃え */
+        font-size: 1.8em; 
+        text-align: left; 
     }
     .hero-description {
-        font-size: 1.0em; /* ★ 縦積みにしたのでフォントを戻す */
-        text-align: left; /* ★ 依頼通り左揃え */
-        text-indent: 1em; /* ★ 依頼通りインデント */
+        font-size: 1.0em; 
+        text-align: left; 
+        text-indent: 1em; 
     }
     .hero-image-placeholder {
-        /* ★ PC用の grid を解除 (order: 2) */
-        grid-column: auto;
-        grid-row: auto;
         order: 2; 
-        min-height: 300px; /* ★★★ 200px から 300px に変更 ★★★ */
-        height: 300px; /* ★★★ 200px から 300px に変更 ★★★ */
+        min-height: 300px; 
+        height: 300px; 
         width: 100%;
     }
     .hero-image-placeholder lottie-player {
-        height: 300px; /* ★★★ 200px から 300px に変更 ★★★ */
+        height: 300px; 
     }
     .hero-cta-button {
-        /* ★ PC用の grid を解除 (order: 3) */
-        grid-column: auto;
-        grid-row: auto;
         order: 3;
-        justify-self: center; /* ★ 中央揃え */
-        font-size: 1.1em; /* ★ フォントサイズを調整 */
-        padding: 15px 30px; /* ★ paddingを調整 */
+        justify-self: center; 
+        font-size: 1.1em; 
+        padding: 15px 30px; 
     }
 
-
-    /* ★ 診断ページ (Focus Mode) のレスポンシブ */
-    .quiz-container {
-        width: 100%;
-        padding: 10px;
-        margin-top: 20px;
-    }
-    .question-text {
-        font-size: 1.2em;
-    }
-    .choice-item label {
-        padding: 15px;
-        font-size: 1.0em;
-    }
-    /* ★★★ 選択中スタイルの padding もスマホ用に調整 */
+    /* --- 診断ページ --- */
+    .quiz-container { width: 100%; padding: 10px; margin-top: 20px; }
+    .question-text { font-size: 1.2em; }
+    .choice-item label { padding: 15px; font-size: 1.0em; }
     .choice-item input[type="radio"]:checked + label,
-    .choice-item label.choice-selected {
-        /* (15-1=14, 15-1=14) の方が良い */
-        padding: 14px; /* 15px - 1px = 14px */
-    }
-    .back-button {
-        width: 150px; /* ★★★ 100% から 150px に変更 */
-    }
+    .choice-item label.choice-selected { padding: 14px; }
+    .back-button { width: 150px; }
+    .freetext-container { width: 100%; padding: 10px; margin-top: 20px; }
+    .freetext-container h2 { font-size: 1.6em; }
+    .freetext-container p.description { font-size: 1.2em; }
+
+    /* --- 結果ページ --- */
+    .result-container { padding: 0; }
+    .result-banner { padding: 20px; margin-bottom: 20px; }
+    .result-banner #score-value { font-size: 2.5em; }
+    .overall-result-area { padding: 0 20px; }
+    .chart-container { height: 300px; min-width: 0; }
     
-    /* ★ 自由記述欄のレスポンシブ */
-    .freetext-container {
-        width: 100%;
-        padding: 10px;
-        margin-top: 20px;
-    }
-    .freetext-container h2 {
-        font-size: 1.6em; /* 少し調整 */
-    }
-    .freetext-container p.description {
-        font-size: 1.2em; /* .question-text と合わせる */
-    }
-
-    /* ★★★ 結果ページのレスポンシブ ★★★ */
-    .result-container {
-        padding: 0; /* スマホでもコンテナのpaddingを削除 */
-    }
-    .result-banner {
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-    .result-banner #score-value {
-        font-size: 2.5em;
-    }
-    .overall-result-area {
-        padding: 0 20px; /* スマホ用のpadding */
-    }
-    .chart-container {
-        height: 300px; /* スマホではチャートを少し小さく */
-        min-width: 0; /* ★★★ レーダーチャートのはみ出し修正 ★★★ */
-    }
-    .detailed-results-section {
-        padding: 0 20px; /* スマホ用のpadding */
-    }
-    /* ★★★ スマホでのアコーディオンヘッダー調整 ★★★ */
-    .card-header {
-        padding: 12px 40px 12px 15px; /* ★ 右余白(40px)をスマホでも確保 */
-    }
-    .card-header .category-name {
-        font-size: 1.1em;
-    }
-
-    /* ★★★ アコーディオン詳細リストのレイアウト修正 ★★★ */
+    .detailed-results-section { padding: 0 20px; }
+    .card-header { padding: 12px 40px 12px 15px; }
+    .card-header .category-name { font-size: 1.1em; }
+    
     .answer-item {
-        display: block; /* ★ flex-wrap から block に変更 */
+        display: block; /* ★ スマホでは縦積み */
         padding: 10px 15px;
     }
     .answer-label {
-        display: block;
-        flex: none; /* ★ PC用の flex: 0 0 140px を解除 */
-        width: 100%; /* ★ 幅を100%に */
-        font-size: 1.0em;
-        margin-bottom: 8px; /* ★ 選択肢との間に余白 */
+        display: block; flex: none; width: 100%;
+        font-size: 1.0em; margin-bottom: 8px; 
     }
-    /* ★★★ 新規：選択肢とランクを囲う行 ★★★ */
     .answer-row {
-        display: flex; /* ★ 選択肢とランクを横並びにする */
-        justify-content: space-between; /* ★ 左右に振り分け */
-        align-items: center; /* ★ 中央揃え */
-        gap: 15px;
+        /* ★ スマホでも選択肢とランクは横並び */
+        display: flex; justify-content: space-between; align-items: center; gap: 15px;
     }
-    .answer-choice {
-        flex-grow: 1;
-        font-size: 0.95em;
-        text-align: left;
-    }
-    .answer-rank, .answer-rank-na {
-        flex-shrink: 0;
-        min-width: 50px;
-        text-align: right;
-    }
+    .answer-choice { flex-grow: 1; font-size: 0.95em; text-align: left; }
+    .answer-rank, .answer-rank-na { flex-shrink: 0; min-width: 50px; text-align: right; }
 
+    .concerns-section { padding: 0 20px; margin-bottom: 20px; }
 
-    .concerns-section {
-        padding: 0 20px; /* スマホ用のpadding */
-        margin-bottom: 20px;
-    }
-    /* ★★★ スマホでのフッターボタン修正 ★★★ */
     .result-footer-buttons {
-        padding: 20px; /* スマホ用のpadding */
-        flex-direction: column; /* ★ ボタンを縦積みに変更 */
-        gap: 15px; /* ★ ボタン間の隙間 */
+        padding: 20px; 
+        flex-direction: column; /* ★ ボタン縦積み */
+        gap: 15px;
     }
     .result-footer-buttons .back-button,
     .result-footer-buttons .next-button {
-        width: 100%; /* ★ ボタンを全幅に */
-        box-sizing: border-box; /* ★ paddingを含めて全幅に */
-        margin: 0; /* ★ マージンをリセット */
+        width: 100%; 
+        box-sizing: border-box; 
+        margin: 0;
     }
 
-
-    /* ★ フッターのレスポンシブ */
-    .global-footer {
-        flex-direction: column; /* フッターは縦積みに変更 */
-        gap: 15px;
-    }
+    .global-footer { flex-direction: column; gap: 15px; }
 }

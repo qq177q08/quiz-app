@@ -26,12 +26,10 @@
             </div>
 
             <div class="overall-result-area">
-                
                 <div class="overall-comment">
                     <h4>総合コメント</h4>
                     <p id="overall-comment-text">診断結果を計算中です...</p>
                 </div>
-                
                 <div class="chart-container">
                     <canvas id="radar-chart"></canvas>
                 </div>
@@ -59,9 +57,8 @@
 
     <footer class="global-footer">
         <p>©2025 外国人材定着支援ナビ All rights reserved.</p>
-        
         <div class="footer-links">
-            <a href="mailto:s24011@st.kic.ac.jp" class="footer-contact-icon" aria-label="お問い合わせ">
+            <a href="mailto:info@example.com" class="footer-contact-icon" aria-label="お問い合わせ">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
                     <path d="M0 0h24v24H0z" fill="none"/>
                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
@@ -70,6 +67,19 @@
         </div>
     </footer>
 
+    <div class="modal-overlay" id="question-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="modal-question-number"></h4>
+                <button class="modal-close-button" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-question-text"></p>
+            </div>
+        </div>
+    </div>
+
     <script src="result.js"></script>
-    <script src="header.js"></script> </body>
+    <script src="header.js"></script> 
+</body>
 </html>
